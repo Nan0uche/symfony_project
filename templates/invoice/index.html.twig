@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Factures{% endblock %}
+
+{% block body %}
+    <h1>Mes Factures</h1>
+
+    {% if invoices|length > 0 %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Date</th>
+                        <th>Montant</th>
+                        <th>Adresse</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                        <tr>
+                            <td>{{ invoice.id }}</td>
+                            <td>{{ invoice.transactionDate|date('d/m/Y H:i') }}</td>
+                            <td>{{ invoice.amount }} €</td>
+                            <td>{{ invoice.billingAddress }}, {{ invoice.billingZipCode }} {{ invoice.billingCity }}</td>
+                            <td>
+                                <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-eye"></i> Voir
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Vous n'avez pas encore de factures.
+        </div>
+    {% endif %}
+{% endblock %} 

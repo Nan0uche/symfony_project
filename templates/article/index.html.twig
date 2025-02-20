@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Nos Articles</h1>
+        </div>
+        <div class="col-md-4">
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" name="q" placeholder="Rechercher..." value="{{ app.request.query.get('q') }}">
+                <button class="btn btn-outline-primary" type="submit">Rechercher</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for article in articles %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if article.imageUrl %}
+                        <img src="{{ article.imageUrl }}" class="card-img-top" alt="{{ article.name }}">
+                    {% else %}
+                        <img src="/images/default-product.jpg" class="card-img-top" alt="Image par défaut">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.name }}</h5>
+                        <p class="card-text">{{ article.description|slice(0, 100) }}...</p>
+                        <p class="card-text">
+                            <strong class="text-primary">{{ article.price }} €</strong>
+                            {% if article.stock and article.stock.quantity > 0 %}
+                                <span class="badge bg-success float-end">En stock</span>
+                            {% else %}
+                                <span class="badge bg-danger float-end">Rupture de stock</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary w-100">Voir détails</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Aucun article trouvé.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Pagination #}
+    {% if articles.haveToPaginate is defined and articles.haveToPaginate %}
+        <div class="navigation d-flex justify-content-center">
+            {{ knp_pagination_render(articles) }}
+        </div>
+    {% endif %}
+{% endblock %} 

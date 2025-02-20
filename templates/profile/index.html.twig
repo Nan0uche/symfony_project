@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Mon Profil</h2>
+                <div class="mb-3">
+                    <strong>Nom d'utilisateur:</strong> {{ user.username }}
+                </div>
+                <div class="mb-3">
+                    <strong>Email:</strong> {{ user.email }}
+                </div>
+                <div class="mb-3">
+                    <strong>Solde:</strong> {{ user.balance }} €
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

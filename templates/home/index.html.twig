@@ -1,15 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bienvenue{% endblock %}
+{% block title %}Accueil - Mon E-Shop{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <div class="text-center">
-        <h1>Bienvenue sur notre site</h1>
-        <div class="mt-4">
-            <a href="{{ path('app_register') }}" class="btn btn-primary me-3">S'inscrire</a>
-            <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
-        </div>
+    <div class="jumbotron text-center py-5 bg-light mb-4">
+        <h1 class="display-4">Bienvenue sur Mon E-Shop</h1>
+        <p class="lead">Découvrez notre sélection d'articles exceptionnels</p>
     </div>
-</div>
+
+    <h2 class="mb-4">Derniers articles</h2>
+    <div class="row">
+        {% for article in latest_articles %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    {% if article.imageUrl %}
+                        <img src="{{ article.imageUrl }}" class="card-img-top" alt="{{ article.name }}">
+                    {% else %}
+                        <img src="/images/default-product.jpg" class="card-img-top" alt="Image par défaut">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.name }}</h5>
+                        <p class="card-text">{{ article.description|slice(0, 100) }}...</p>
+                        <p class="card-text"><strong>{{ article.price }} €</strong></p>
+                        <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-primary">Voir détails</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

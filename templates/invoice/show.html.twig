@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Facture #{{ invoice.id }}{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="mb-0">Facture #{{ invoice.id }}</h1>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-sm-6">
+                    <h6 class="mb-3">De:</h6>
+                    <div>
+                        <strong>Mon E-Shop</strong>
+                    </div>
+                    <div>123 Rue du Commerce</div>
+                    <div>75001 Paris</div>
+                    <div>Email: contact@moneshop.com</div>
+                </div>
+
+                <div class="col-sm-6">
+                    <h6 class="mb-3">À:</h6>
+                    <div>
+                        <strong>{{ invoice.user.username }}</strong>
+                    </div>
+                    <div>{{ invoice.billingAddress }}</div>
+                    <div>{{ invoice.billingZipCode }} {{ invoice.billingCity }}</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ invoice.transactionDate|date('d/m/Y H:i') }}</td>
+                                    <td>{{ invoice.amount }} €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <a href="{{ path('app_invoices') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour aux factures
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

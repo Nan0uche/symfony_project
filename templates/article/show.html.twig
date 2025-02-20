@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.name }} - Mon E-Shop{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6">
+            {% if article.imageUrl %}
+                <img src="{{ article.imageUrl }}" class="img-fluid rounded" alt="{{ article.name }}">
+            {% else %}
+                <img src="/images/default-product.jpg" class="img-fluid rounded" alt="Image par défaut">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h1>{{ article.name }}</h1>
+            <p class="lead">{{ article.description }}</p>
+            <div class="mb-4">
+                <h3 class="text-primary">{{ article.price }} €</h3>
+                {% if article.stock and article.stock.quantity > 0 %}
+                    <span class="badge bg-success">En stock ({{ article.stock.quantity }} disponibles)</span>
+                {% else %}
+                    <span class="badge bg-danger">Rupture de stock</span>
+                {% endif %}
+            </div>
+            
+            {% if app.user %}
+                <form action="{{ path('app_cart_add', {'id': article.id}) }}" method="post" class="mb-3">
+                    <div class="input-group">
+                        <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ article.stock.quantity }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-cart-plus"></i> Ajouter au panier
+                        </button>
+                    </div>
+                </form>
+            {% else %}
+                <div class="alert alert-info">
+                    <a href="{{ path('app_login') }}">Connectez-vous</a> pour ajouter cet article au panier.
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <h4>Informations supplémentaires</h4>
+                <ul class="list-unstyled">
+                    <li><strong>Vendeur:</strong> {{ article.author.username }}</li>
+                    <li><strong>Date de publication:</strong> {{ article.publishDate|date('d/m/Y') }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

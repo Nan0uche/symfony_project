@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="mb-0">Adresse de facturation</h2>
+                </div>
+                <div class="card-body">
+                    <form id="payment-form">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label for="address" class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="address" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label">Ville</label>
+                                <input type="text" class="form-control" id="city" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zipcode" class="form-label">Code postal</label>
+                                <input type="text" class="form-control" id="zipcode" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Paiement</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Système de paiement à implémenter
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Résumé de la commande</h2>
+                </div>
+                <div class="card-body">
+                    {% for item in cart_items %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>{{ item.article.name }} x {{ item.quantity }}</span>
+                            <span>{{ (item.article.price * item.quantity)|number_format(2, ',', ' ') }} €</span>
+                        </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Total</strong>
+                        <strong>{{ total|number_format(2, ',', ' ') }} €</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} 
