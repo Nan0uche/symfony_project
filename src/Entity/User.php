@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -39,6 +41,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Article::class)]
+    private Collection $articles;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
+    private Collection $cartItems;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+        $this->cartItems = new ArrayCollection();
+    }
 
     // Getters et Setters
     public function getId(): ?int
@@ -121,6 +135,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Si vous stockez des données temporaires sensibles sur l'utilisateur, effacez-les ici
+
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): static
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
+            $article->setAuthor($this);
+        }
+        return $this;
+    }
+
+    public function removeArticle(Article $article): static
+    {
+        if ($this->articles->removeElement($article)) {
+            if ($article->getAuthor() === $this) {
+                $article->setAuthor(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Cart>
+     */
+    public function getCartItems(): Collection
+    {
+        return $this->cartItems;
+    }
+
+    public function addCartItem(Cart $cartItem): static
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems->add($cartItem);
+            $cartItem->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeCartItem(Cart $cartItem): static
+    {
+        if ($this->cartItems->removeElement($cartItem)) {
+            if ($cartItem->getUser() === $this) {
+                $cartItem->setUser(null);
+            }
+        }
+        return $this;
     }
 }

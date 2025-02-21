@@ -89,6 +89,7 @@ body {
     border-radius: 5px;
     padding: 12px;
     transition: var(--transition);
+    margin-bottom: 1rem;
 }
 
 .form-control:focus {
@@ -155,4 +156,30 @@ body {
     .card-img-top {
         height: 150px;
     }
+}
+
+textarea.form-control {
+    min-height: 150px;
+}
+
+.money-wrapper {
+    position: relative;
+}
+
+.money-wrapper:before {
+    content: '€';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color);
+    opacity: 0.5;
+}
+
+.preview-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 5px;
+    display: none;
 } 

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel Article{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-4">Mettre un article en vente</h1>
+
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_row(form.name, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.description, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.price, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.imageUrl, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Mettre en vente</button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

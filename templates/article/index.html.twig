@@ -3,6 +3,7 @@
 {% block title %}Articles{% endblock %}
 
 {% block body %}
+<div class="container">
     <div class="row mb-4">
         <div class="col-md-8">
             <h1>Nos Articles</h1>
@@ -22,17 +23,23 @@
                     {% if article.imageUrl %}
                         <img src="{{ article.imageUrl }}" class="card-img-top" alt="{{ article.name }}">
                     {% else %}
-                        <img src="/images/default-product.jpg" class="card-img-top" alt="Image par défaut">
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ article.name }}</h5>
                         <p class="card-text">{{ article.description|slice(0, 100) }}...</p>
                         <p class="card-text">
                             <strong class="text-primary">{{ article.price }} €</strong>
-                            {% if article.stock and article.stock.quantity > 0 %}
-                                <span class="badge bg-success float-end">En stock</span>
-                            {% else %}
-                                <span class="badge bg-danger float-end">Rupture de stock</span>
+                            {% if article.stock %}
+                                <span class="badge {% if article.stock.quantity > 0 %}bg-success{% else %}bg-danger{% endif %} float-end">
+                                    {% if article.stock.quantity > 0 %}
+                                        En stock
+                                    {% else %}
+                                        Rupture de stock
+                                    {% endif %}
+                                </span>
                             {% endif %}
                         </p>
                     </div>
@@ -56,4 +63,5 @@
             {{ knp_pagination_render(articles) }}
         </div>
     {% endif %}
+</div>
 {% endblock %} 

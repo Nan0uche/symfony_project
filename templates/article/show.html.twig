@@ -1,50 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ article.name }} - Mon E-Shop{% endblock %}
+{% block title %}{{ article.name }}{% endblock %}
 
 {% block body %}
+<div class="container">
     <div class="row">
         <div class="col-md-6">
             {% if article.imageUrl %}
-                <img src="{{ article.imageUrl }}" class="img-fluid rounded" alt="{{ article.name }}">
+                <img src="{{ article.imageUrl }}" class="img-fluid rounded shadow" alt="{{ article.name }}">
             {% else %}
-                <img src="/images/default-product.jpg" class="img-fluid rounded" alt="Image par défaut">
+                <div class="placeholder-image bg-light rounded shadow d-flex align-items-center justify-content-center" style="height: 400px;">
+                    <i class="fas fa-image fa-3x text-muted"></i>
+                </div>
             {% endif %}
         </div>
         <div class="col-md-6">
-            <h1>{{ article.name }}</h1>
-            <p class="lead">{{ article.description }}</p>
-            <div class="mb-4">
-                <h3 class="text-primary">{{ article.price }} €</h3>
-                {% if article.stock and article.stock.quantity > 0 %}
-                    <span class="badge bg-success">En stock ({{ article.stock.quantity }} disponibles)</span>
-                {% else %}
-                    <span class="badge bg-danger">Rupture de stock</span>
-                {% endif %}
+            <h1 class="mb-4">{{ article.name }}</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Description</h5>
+                    <p class="card-text">{{ article.description }}</p>
+                </div>
             </div>
-            
-            {% if app.user %}
-                <form action="{{ path('app_cart_add', {'id': article.id}) }}" method="post" class="mb-3">
-                    <div class="input-group">
-                        <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ article.stock.quantity }}">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-cart-plus"></i> Ajouter au panier
-                        </button>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="text-primary mb-0">{{ article.price }} €</h2>
+                        <span class="badge {% if article.stock and article.stock.quantity > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                            {% if article.stock and article.stock.quantity > 0 %}
+                                En stock ({{ article.stock.quantity }})
+                            {% else %}
+                                Rupture de stock
+                            {% endif %}
+                        </span>
                     </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Informations</h5>
+                    <p class="mb-2"><strong>Vendeur:</strong> {{ article.author.username }}</p>
+                    <p class="mb-0"><strong>Publié le:</strong> {{ article.publishDate|date('d/m/Y à H:i') }}</p>
+                </div>
+            </div>
+            {% if app.user and article.stock and article.stock.quantity > 0 %}
+                <form action="{{ path('app_cart_add', {'id': article.id}) }}" method="post" class="d-flex gap-2">
+                    <input type="number" name="quantity" value="1" min="1" max="{{ article.stock.quantity }}" class="form-control" style="width: 100px;">
+                    <button type="submit" class="btn btn-primary flex-grow-1">
+                        <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
+                    </button>
                 </form>
-            {% else %}
+            {% elseif not app.user %}
                 <div class="alert alert-info">
                     <a href="{{ path('app_login') }}">Connectez-vous</a> pour ajouter cet article au panier.
                 </div>
             {% endif %}
-
-            <div class="mt-4">
-                <h4>Informations supplémentaires</h4>
-                <ul class="list-unstyled">
-                    <li><strong>Vendeur:</strong> {{ article.author.username }}</li>
-                    <li><strong>Date de publication:</strong> {{ article.publishDate|date('d/m/Y') }}</li>
-                </ul>
-            </div>
         </div>
     </div>
+</div>
 {% endblock %} 

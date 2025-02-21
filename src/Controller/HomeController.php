@@ -12,8 +12,14 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(ArticleRepository $articleRepository): Response
     {
+        $latestArticles = $articleRepository->findBy(
+            [], // critères
+            ['publishDate' => 'DESC'], // tri
+            6 // limite
+        );
+
         return $this->render('home/index.html.twig', [
-            'latest_articles' => $articleRepository->findLatest(6),
+            'latest_articles' => $latestArticles,
         ]);
     }
 }
