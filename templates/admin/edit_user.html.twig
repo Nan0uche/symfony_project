@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier mon profil{% endblock %}
+{% block title %}Administration - Modifier un utilisateur{% endblock %}
 
 {% block body %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card shadow">
             <div class="card-body">
-                <h1 class="card-title mb-4">Modifier mon profil</h1>
+                <h1 class="card-title mb-4">Modifier l'utilisateur {{ user.username }}</h1>
 
                 {{ form_start(form) }}
                     <div class="mb-3">
@@ -22,8 +22,16 @@
                         {{ form_row(form.plainPassword, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
+                    <div class="mb-3">
+                        {{ form_row(form.roles, {'attr': {'class': 'form-check-input'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_row(form.balance, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
                     <div class="d-flex justify-content-between">
-                        <a href="{{ path('app_profile') }}" class="btn btn-outline-secondary">Annuler</a>
+                        <a href="{{ path('app_admin_users') }}" class="btn btn-outline-secondary">Annuler</a>
                         <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
                     </div>
                 {{ form_end(form) }}
@@ -31,4 +39,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %} 

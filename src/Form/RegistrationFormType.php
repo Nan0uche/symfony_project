@@ -22,40 +22,33 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'Nom d\'utilisateur',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer un nom d\'utilisateur',
-                    ]),
-                ],
+                'attr' => ['placeholder' => 'Votre nom d\'utilisateur']
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
+                'attr' => ['placeholder' => 'Votre adresse email']
+            ])
+            ->add('agreeTerms', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'J\'accepte les conditions d\'utilisation',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer un email',
+                    new IsTrue([
+                        'message' => 'Vous devez accepter les conditions d\'utilisation.',
                     ]),
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
                 'label' => 'Mot de passe',
+                'attr' => ['autocomplete' => 'new-password', 'placeholder' => 'Votre mot de passe'],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} caractères',
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         'max' => 4096,
-                    ]),
-                ],
-            ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'label' => 'J\'accepte les conditions',
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devez accepter les conditions.',
                     ]),
                 ],
             ])
@@ -66,9 +59,6 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'attr' => [
-                'novalidate' => 'novalidate', // désactive la validation HTML5
-            ],
         ]);
     }
 }

@@ -32,8 +32,7 @@ class ArticleType extends AbstractType
                 'required' => false
             ])
             ->add('quantity', IntegerType::class, [
-                'label' => 'Quantité',
-                'mapped' => false
+                'label' => 'Quantité'
             ])
         ;
     }

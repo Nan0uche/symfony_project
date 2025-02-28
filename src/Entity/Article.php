@@ -28,14 +28,13 @@ class Article
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $publishDate = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'articles')]
+    #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-    #[ORM\OneToOne(mappedBy: 'article', targetEntity: Stock::class, cascade: ['persist', 'remove'])]
-    private ?Stock $stock = null;
+    #[ORM\Column]
+    private ?int $quantity = null;
 
-    // Getters et Setters
     public function getId(): ?int
     {
         return $this->id;
@@ -107,20 +106,25 @@ class Article
         return $this;
     }
 
-    public function getStock(): ?Stock
+    public function getQuantity(): ?int
     {
-        return $this->stock;
+        return $this->quantity;
     }
 
-    public function setStock(?Stock $stock): static
+    public function setQuantity(int $quantity): static
     {
-        if ($stock === null && $this->stock !== null) {
-            $this->stock->setArticle(null);
-        }
-        if ($stock !== null && $stock->getArticle() !== $this) {
-            $stock->setArticle($this);
-        }
-        $this->stock = $stock;
+        $this->quantity = $quantity;
         return $this;
+    }
+
+    public function decreaseQuantity(int $amount): static
+    {
+        $this->quantity = max(0, $this->quantity - $amount);
+        return $this;
+    }
+
+    public function isInStock(): bool
+    {
+        return $this->quantity > 0;
     }
 }

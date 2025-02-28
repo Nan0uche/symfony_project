@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Articles{% endblock %}
+{% block title %}Mes Articles{% endblock %}
 
 {% block body %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Tous les articles</h1>
+    <h1>Mes Articles</h1>
     <a href="{{ path('app_article_new') }}" class="btn btn-primary">
         <i class="fas fa-plus me-1"></i> Nouvel article
     </a>
@@ -36,14 +36,18 @@
                             {% endif %}
                         </span>
                     </div>
-                    <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-outline-primary w-100">Voir détails</a>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-outline-primary flex-grow-1">Voir</a>
+                        <a href="{{ path('app_article_edit', {'id': article.id}) }}" class="btn btn-outline-secondary flex-grow-1">Modifier</a>
+                    </div>
                 </div>
             </div>
         </div>
     {% else %}
         <div class="col-12">
             <div class="alert alert-info">
-                Aucun article disponible pour le moment.
+                Vous n'avez pas encore mis d'articles en vente.
+                <a href="{{ path('app_article_new') }}" class="alert-link">Créer votre premier article</a>
             </div>
         </div>
     {% endfor %}

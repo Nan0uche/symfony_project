@@ -3,55 +3,105 @@
 {% block title %}Mon Panier{% endblock %}
 
 {% block body %}
-    <h1>Mon Panier</h1>
+<h1 class="mb-4">Mon Panier</h1>
 
-    {% if cart_items|length > 0 %}
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Article</th>
-                        <th>Prix unitaire</th>
-                        <th>Quantité</th>
-                        <th>Total</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart_items %}
-                        <tr>
-                            <td>{{ item.article.name }}</td>
-                            <td>{{ item.article.price }} €</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ (item.article.price * item.quantity)|number_format(2, ',', ' ') }} €</td>
-                            <td>
-                                <a href="{{ path('app_cart_remove', {'id': item.id}) }}" class="btn btn-danger btn-sm">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" class="text-end"><strong>Total</strong></td>
-                        <td colspan="2"><strong>{{ total|number_format(2, ',', ' ') }} €</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
+{% if cart_items|length > 0 %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Article</th>
+                                <th class="text-center">Prix unitaire</th>
+                                <th class="text-center">Quantité</th>
+                                <th class="text-end">Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if item.article.imageUrl %}
+                                                <img src="{{ item.article.imageUrl }}" alt="{{ item.article.name }}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="bg-light d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                                    <i class="fas fa-image text-secondary"></i>
+                                                </div>
+                                            {% endif %}
+                                            <a href="{{ path('app_article_show', {'id': item.article.id}) }}">{{ item.article.name }}</a>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">{{ item.article.price }} €</td>
+                                    <td class="text-center">
+                                        <form action="{{ path('app_cart_update', {'id': item.id}) }}" method="post" class="d-flex justify-content-center">
+                                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.article.quantity }}" class="form-control form-control-sm" style="width: 70px;" onchange="this.form.submit()">
+                                        </form>
+                                    </td>
+                                    <td class="text-end">{{ (item.article.price * item.quantity)|number_format(2, ',', ' ') }} €</td>
+                                    <td class="text-end">
+                                        <form action="{{ path('app_cart_remove', {'id': item.id}) }}" method="post">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-        <div class="d-flex justify-content-between mt-3">
-            <a href="{{ path('app_articles') }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Continuer mes achats
-            </a>
-            <a href="#" class="btn btn-success">
-                Passer la commande <i class="fas fa-arrow-right"></i>
-            </a>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Récapitulatif</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total articles :</span>
+                        <span>{{ total|number_format(2, ',', ' ') }} €</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Votre solde :</span>
+                        <span>{{ app.user.balance|number_format(2, ',', ' ') }} €</span>
+                    </div>
+                    <hr>
+                    <form action="{{ path('app_cart_checkout') }}" method="post">
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Adresse de livraison</label>
+                            <input type="text" id="address" name="address" class="form-control" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-4">
+                                <label for="zipcode" class="form-label">Code postal</label>
+                                <input type="text" id="zipcode" name="zipcode" class="form-control" required>
+                            </div>
+                            <div class="col-8">
+                                <label for="city" class="form-label">Ville</label>
+                                <input type="text" id="city" name="city" class="form-control" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 {% if app.user.balance < total %}disabled{% endif %}">
+                            <i class="fas fa-check me-2"></i>Passer commande
+                        </button>
+                        {% if app.user.balance < total %}
+                            <div class="alert alert-warning mt-3 mb-0">
+                                Solde insuffisant pour effectuer cet achat.
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
         </div>
-    {% else %}
-        <div class="alert alert-info">
-            Votre panier est vide. <a href="{{ path('app_articles') }}">Parcourir les articles</a>
-        </div>
-    {% endif %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        Votre panier est vide. <a href="{{ path('app_articles') }}" class="alert-link">Parcourir les articles</a>
+    </div>
+{% endif %}
 {% endblock %} 

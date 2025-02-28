@@ -1,26 +1,70 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Profil de {{ user.username }}{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>{{ user.username }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Informations de {{ user.username }}</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+                <p><strong>Rôle :</strong> 
+                    {% if user.isAdmin %}
+                        Administrateur
+                    {% else %}
+                        Utilisateur
+                    {% endif %}
+                </p>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <p><strong>Email :</strong> {{ user.email }}</p>
+                    <p><strong>Solde :</strong> {{ user.balance|number_format(2, ',', ' ') }} €</p>
+                    <a href="{{ path('app_admin_user_edit', {'id': user.id}) }}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-edit me-2"></i>Modifier ce profil
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Articles mis en vente par {{ user.username }}</h5>
+            </div>
+            <div class="card-body">
+                {% if user.articles|length > 0 %}
+                    <div class="row">
+                        {% for article in user.articles %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100 shadow-sm">
+                                    {% if article.imageUrl %}
+                                        <img src="{{ article.imageUrl }}" class="card-img-top" alt="{{ article.name }}" style="height: 150px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 150px;">
+                                            <i class="fas fa-image fa-3x text-secondary"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ article.name }}</h5>
+                                        <p class="card-text">{{ article.description|slice(0, 50) }}{% if article.description|length > 50 %}...{% endif %}</p>
+                                    </div>
+                                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                                        <span class="text-primary fw-bold">{{ article.price }} €</span>
+                                        <a href="{{ path('app_article_show', {'id': article.id}) }}" class="btn btn-sm btn-outline-primary">Voir détails</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        Cet utilisateur n'a pas encore mis d'articles en vente.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

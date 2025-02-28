@@ -32,11 +32,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50, unique: true)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $username = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[ORM\Column]
     private ?float $balance = 0.0;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -45,13 +44,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Article::class)]
     private Collection $articles;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class, orphanRemoval: true)]
     private Collection $cartItems;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Invoice::class)]
+    private Collection $invoices;
 
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->cartItems = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
 
     // Getters et Setters
@@ -68,17 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-        return $this;
-    }
-
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): static
-    {
-        $this->username = $username;
         return $this;
     }
 
@@ -111,6 +103,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): static
+    {
+        $this->username = $username;
+        return $this;
+    }
+
     public function getBalance(): ?float
     {
         return $this->balance;
@@ -135,7 +138,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-
+        // If you store any temporary, sensitive data on the user, clear it here
     }
 
     /**
@@ -190,5 +193,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            if ($invoice->getUser() === $this) {
+                $invoice->setUser(null);
+            }
+        }
+        return $this;
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
     }
 }
