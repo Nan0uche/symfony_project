@@ -14,8 +14,7 @@ Cette application web permet aux utilisateurs de créer, consulter, modifier et 
 
 ### Étape 1: Cloner le dépôt
 ```bash
-git clone https://github.com/votre-utilisateur/grole.git
-cd grole
+git clone https://github.com/Nan0uche/symfony_project.git
 ```
 
 ### Étape 2: Installer les dépendances
