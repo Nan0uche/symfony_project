@@ -22,17 +22,7 @@ git clone https://github.com/Nan0uche/symfony_project.git
 composer install
 ```
 
-### Étape 3: Configurer l'environnement
-```bash
-# Copier le fichier d'exemple d'environnement
-cp .env.example .env
-
-# Modifier le fichier .env avec vos paramètres
-# Notamment la connexion à la base de données:
-# DATABASE_URL="mysql://username:password@127.0.0.1:3306/grole_db?serverVersion=8.0"
-```
-
-### Étape 4: Créer la base de données
+### Étape 3: Créer la base de données
 ```bash
 # Créer la base de données
 php bin/console doctrine:database:create
@@ -46,25 +36,16 @@ php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
 ```
 
-### Étape 6: Démarrer le serveur de développement
+### Étape 6: Démarrer le serveur
 ```bash
 # Avec Symfony CLI
 symfony server:start
-
-# Ou avec le serveur interne de PHP
-php -S localhost:8000 -t public/
 ```
 
 ## Configuration
 
 ### Base de données
 Modifiez la variable `DATABASE_URL` dans le fichier `.env` pour configurer la connexion à votre base de données.
-
-### Sécurité
-Modifiez la variable `APP_SECRET` dans le fichier `.env` pour définir une clé secrète unique pour votre application.
-
-### Email (si utilisé)
-Configurez le service d'email en modifiant la variable `MAILER_DSN` dans le fichier `.env`.
 
 ## Fonctionnalités
 
@@ -129,29 +110,6 @@ Configurez le service d'email en modifiant la variable `MAILER_DSN` dans le fich
 - Mettez à jour régulièrement vos offres pour maintenir leur pertinence
 - Déconnectez-vous après utilisation sur un appareil partagé
 
-## Résolution des problèmes courants
-
-### Erreur de base de données
-Vérifiez que:
-- Les informations de connexion dans `.env` sont correctes
-- La base de données existe
-- L'utilisateur a les permissions nécessaires
-
-### Erreur de droits sur les fichiers
-Sur les systèmes Unix-like:
-```bash
-chmod +x bin/console
-```
-
-### Problèmes d'affichage/CSS
-Vérifiez que:
-- Les assets ont été compilés (si vous utilisez Webpack Encore)
-- Le cache du navigateur a été vidé
-
-### Problèmes de sessions
-Vérifiez que:
-- Le dossier `var/cache` est accessible en écriture
-- `APP_SECRET` est correctement configuré
 
 ## Informations techniques
 - Développé avec Symfony
